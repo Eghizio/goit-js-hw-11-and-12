@@ -1,3 +1,6 @@
+const API_KEY =
+  '46463630-3c03a0f5bb3e2a02ee15ce5e1'; /* This should be kept a secret within Environmental Variables */
+
 document
   .querySelector('form#image-search')
   .addEventListener('submit', event => {
@@ -8,8 +11,6 @@ document
     getPhotos(searchQuery).then(console.log);
   });
 
-const API_KEY = 'my_secret_pixabay_api_key';
-
 const getPhotos = searchQuery => {
   const params = new URLSearchParams({
     key: API_KEY,
@@ -19,7 +20,7 @@ const getPhotos = searchQuery => {
     safesearch: true,
   });
 
-  return fetch(`pixabay_api_endpoint_url?${params}`)
+  return fetch(`https://pixabay.com/api?${params}`)
     .then(response => response.json())
     .catch(console.error);
 };
