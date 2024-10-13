@@ -15,7 +15,6 @@ document
     const gallery = document.querySelector('.gallery');
 
     const photosData = await getPhotos(searchQuery);
-    console.log(photosData);
 
     if (photosData.hits.length === 0) {
       iziToast.error({
@@ -27,10 +26,10 @@ document
       return;
     }
 
-    const photos = photosData.hits.map(toGalleryPhoto);
-    console.log(photos);
-
-    const photoCards = photos.map(createCard);
+    const photoCards = photosData.hits
+      .map(toGalleryPhoto)
+      .map(createCard)
+      .map(applyLightbox);
 
     gallery.replaceChildren(...photoCards);
   });
@@ -79,6 +78,9 @@ const createCard = ({
   const template = document.querySelector('template#card-template');
   const card = document.importNode(template.content, true);
 
+  const lightboxLink = card.querySelector('a#lightbox-link');
+  lightboxLink.href = largeImageURL;
+
   const img = card.querySelector('img.card-img');
   img.src = webformatURL;
   img.alt = tags;
@@ -98,6 +100,28 @@ const createCard = ({
   card.querySelector(
     `span.card-stats-item-count[data-item="downloads"]`
   ).textContent = downloads;
+
+  return card;
+};
+
+const applyLightbox = card => {
+  card.querySelector('a#lightbox-link').addEventListener('click', event => {
+    event.preventDefault();
+
+    const lightbox = new SimpleLightbox('a#lightbox-link');
+
+    const closeModalOnEscape = event => {
+      if (event.key === 'Escape') {
+        lightbox.close();
+        document.removeEventListener('keydown', closeModalOnEscape);
+        lightbox.destroy();
+      }
+    };
+
+    document.addEventListener('keydown', closeModalOnEscape);
+
+    lightbox.open();
+  });
 
   return card;
 };
