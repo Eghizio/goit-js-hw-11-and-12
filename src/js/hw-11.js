@@ -90,6 +90,7 @@ const createCard = ({
   const img = card.querySelector('img.card-img');
   img.src = webformatURL;
   img.alt = tags;
+  img.title = tags;
 
   card.querySelector(
     `span.card-stats-item-count[data-item="likes"]`
