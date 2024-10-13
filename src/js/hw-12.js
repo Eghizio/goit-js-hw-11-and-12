@@ -20,34 +20,35 @@ document
 
     gallery.replaceChildren(createLoader());
 
-    /* `await` Could be changed to Promise callbacks, due to requirements */
-    const photosData = await getPhotos(searchQuery).catch(error => {
+    try {
+      const photosData = await getPhotos(searchQuery);
+
+      if (photosData.hits.length === 0) {
+        iziToast.error({
+          message:
+            'Sorry, there are no images matching your search query. Please try again!',
+          position: 'topRight',
+        });
+        gallery.replaceChildren();
+        return;
+      }
+
+      const photoCards = photosData.hits
+        .map(toGalleryPhoto)
+        .map(createCard)
+        .map(applyLightbox);
+
+      gallery.replaceChildren(...photoCards);
+    } catch (error) {
       iziToast.error({
         message: `Sorry, couldn't load images. Please try again later!`,
         position: 'topRight',
       });
       console.error(error);
       gallery.replaceChildren();
-    });
-
-    if (photosData.hits.length === 0) {
-      iziToast.error({
-        message:
-          'Sorry, there are no images matching your search query. Please try again!',
-        position: 'topRight',
-      });
-      gallery.replaceChildren();
-      return;
+    } finally {
+      lightbox.refresh();
     }
-
-    const photoCards = photosData.hits
-      .map(toGalleryPhoto)
-      .map(createCard)
-      .map(applyLightbox);
-
-    gallery.replaceChildren(...photoCards);
-
-    lightbox.refresh();
   });
 
 const getPhotos = async searchQuery => {
@@ -59,9 +60,8 @@ const getPhotos = async searchQuery => {
     safesearch: true,
   });
 
-  return fetch(`https://pixabay.com/api/?${params}`).then(response =>
-    response.json()
-  );
+  const response = await axios.get(`https://pixabay.com/api/`, { params });
+  return response.data;
 };
 
 const toGalleryPhoto = ({
