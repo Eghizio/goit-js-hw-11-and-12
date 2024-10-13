@@ -16,12 +16,17 @@ document
 
     form.reset();
 
+    const query = {
+      searchQuery,
+      page: 1,
+    };
+
     const gallery = document.querySelector('.gallery');
 
     gallery.replaceChildren(createLoader());
 
     try {
-      const photosData = await getPhotos(searchQuery);
+      const photosData = await getPhotos(query.searchQuery);
 
       if (photosData.hits.length === 0) {
         iziToast.error({
@@ -51,6 +56,7 @@ document
     }
   });
 
+let page = 1;
 const getPhotos = async searchQuery => {
   const params = new URLSearchParams({
     key: API_KEY,
@@ -58,7 +64,7 @@ const getPhotos = async searchQuery => {
     image_type: 'photo',
     orientation: 'horizontal',
     safesearch: true,
-    page: 1,
+    page: page++,
     per_page: 40,
   });
 
