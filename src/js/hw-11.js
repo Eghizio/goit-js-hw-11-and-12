@@ -13,6 +13,10 @@ document
 
     const photos = photosData.hits.map(toGalleryPhoto);
     console.log(photos);
+
+    const photoCards = photos.map(createCard);
+
+    document.querySelector('.gallery').append(...photoCards);
   });
 
 const getPhotos = async searchQuery => {
@@ -47,20 +51,37 @@ const toGalleryPhoto = ({
   downloads,
 });
 
-const examplePhoto = {
-  webformatURL:
-    'https://pixabay.com/get/g17345ce7c6637f7d59e69717dff7959c1e820c9c3cf0ca0f9d32993834cd1833d693ce72128a683f87f8fa0c2b70d170be77ffde7a1985ceceb98f0bb77580d3_640.jpg',
-  largeImageURL:
-    'https://pixabay.com/get/gfc1a03d60aae3e8d5c40a8a0667a8c1e67736c8a96302eb1c9384ef90843f9187a6a0c343bfe9de70fe14ec28058d90766a7bcec4e8d7a8fea27f6dde348a06e_1280.jpg',
-  tags: 'shepherd dog, dog, domestic animal',
-  views: 214986,
-  likes: 645,
-  comments: 133,
-  downloads: 149824,
+const createCard = ({
+  webformatURL,
+  largeImageURL,
+  tags,
+  likes,
+  views,
+  comments,
+  downloads,
+}) => {
+  const template = document.querySelector('template#card-template');
+  const card = document.importNode(template.content, true);
+
+  const img = card.querySelector('img.card-img');
+  img.src = webformatURL;
+  img.alt = tags;
+
+  card.querySelector(
+    `span.card-stats-item-count[data-item="likes"]`
+  ).textContent = likes;
+
+  card.querySelector(
+    `span.card-stats-item-count[data-item="views"]`
+  ).textContent = views;
+
+  card.querySelector(
+    `span.card-stats-item-count[data-item="comments"]`
+  ).textContent = comments;
+
+  card.querySelector(
+    `span.card-stats-item-count[data-item="downloads"]`
+  ).textContent = downloads;
+
+  return card;
 };
-
-const exampleCard = document.querySelector('.card');
-
-const cards = Array.from({ length: 8 }, () => exampleCard.cloneNode(true));
-
-document.querySelector('.gallery').append(...cards);

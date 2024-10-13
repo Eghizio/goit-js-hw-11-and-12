@@ -42,35 +42,45 @@
         </form>
 
         <section class="gallery">
-          <article class="card">
-            <img
-              class="card-img"
-              src="https://pixabay.com/get/g17345ce7c6637f7d59e69717dff7959c1e820c9c3cf0ca0f9d32993834cd1833d693ce72128a683f87f8fa0c2b70d170be77ffde7a1985ceceb98f0bb77580d3_640.jpg"
-              alt="shepherd dog, dog, domestic animal"
-            />
+          <template id="card-template">
+            <article class="card">
+              <img
+                class="card-img"
+                src="https://pixabay.com/get/g17345ce7c6637f7d59e69717dff7959c1e820c9c3cf0ca0f9d32993834cd1833d693ce72128a683f87f8fa0c2b70d170be77ffde7a1985ceceb98f0bb77580d3_640.jpg"
+                alt="shepherd dog, dog, domestic animal"
+              />
 
-            <div class="card-stats">
-              <div class="card-stats-item">
-                <h2 class="card-stats-item-label">Likes</h2>
-                <span class="card-stats-item-count">2137</span>
-              </div>
+              <div class="card-stats">
+                <div class="card-stats-item">
+                  <h2 class="card-stats-item-label">Likes</h2>
+                  <span class="card-stats-item-count" data-item="likes"
+                    >2137</span
+                  >
+                </div>
 
-              <div class="card-stats-item">
-                <h2 class="card-stats-item-label">Views</h2>
-                <span class="card-stats-item-count">69696969</span>
-              </div>
+                <div class="card-stats-item">
+                  <h2 class="card-stats-item-label">Views</h2>
+                  <span class="card-stats-item-count" data-item="views"
+                    >69696969</span
+                  >
+                </div>
 
-              <div class="card-stats-item">
-                <h2 class="card-stats-item-label">Comments</h2>
-                <span class="card-stats-item-count">420</span>
-              </div>
+                <div class="card-stats-item">
+                  <h2 class="card-stats-item-label">Comments</h2>
+                  <span class="card-stats-item-count" data-item="comments"
+                    >420</span
+                  >
+                </div>
 
-              <div class="card-stats-item">
-                <h2 class="card-stats-item-label">Downloads</h2>
-                <span class="card-stats-item-count">13371337</span>
+                <div class="card-stats-item">
+                  <h2 class="card-stats-item-label">Downloads</h2>
+                  <span class="card-stats-item-count" data-item="downloads"
+                    >13371337</span
+                  >
+                </div>
               </div>
-            </div>
-          </article>
+            </article>
+          </template>
         </section>
       </div>
     </main>
