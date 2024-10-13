@@ -18,6 +18,8 @@ document
 
     const gallery = document.querySelector('.gallery');
 
+    gallery.replaceChildren(createLoader());
+
     const photosData = await getPhotos(searchQuery);
 
     if (photosData.hits.length === 0) {
@@ -128,4 +130,8 @@ const applyLightbox = card => {
   });
 
   return card;
+};
+
+const createLoader = () => {
+  return 'Loading images, please wait...';
 };
