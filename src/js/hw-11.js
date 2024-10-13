@@ -20,7 +20,7 @@ const getPhotos = searchQuery => {
     safesearch: true,
   });
 
-  return fetch(`https://pixabay.com/api?${params}`)
+  return fetch(`https://pixabay.com/api/?${params}`)
     .then(response => response.json())
     .catch(console.error);
 };
