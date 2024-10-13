@@ -3,15 +3,19 @@ const API_KEY =
 
 document
   .querySelector('form#image-search')
-  .addEventListener('submit', event => {
+  .addEventListener('submit', async event => {
     event.preventDefault();
 
     const searchQuery = event.target.elements['query'].value;
 
-    getPhotos(searchQuery).then(console.log);
+    const photosData = await getPhotos(searchQuery);
+    console.log(photosData);
+
+    const photos = photosData.hits.map(toGalleryPhoto);
+    console.log(photos);
   });
 
-const getPhotos = searchQuery => {
+const getPhotos = async searchQuery => {
   const params = new URLSearchParams({
     key: API_KEY,
     q: searchQuery,
@@ -24,3 +28,21 @@ const getPhotos = searchQuery => {
     .then(response => response.json())
     .catch(console.error);
 };
+
+const toGalleryPhoto = ({
+  webformatURL,
+  largeImageURL,
+  tags,
+  likes,
+  views,
+  comments,
+  downloads,
+}) => ({
+  webformatURL,
+  largeImageURL,
+  tags,
+  likes,
+  views,
+  comments,
+  downloads,
+});
