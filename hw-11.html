@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/goit-js-hw-11-and-12/favicon.svg" />
     <title>Image search - Homework 11</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -39,18 +39,38 @@
       crossorigin="anonymous"
     ></script>
 
-    <link rel="stylesheet" href="./css/styles.css" />
 
-    <link rel="stylesheet" href="./css/hw-11.css" />
 
-    <script type="module" src="./js/hw-11.js" defer></script>
+    <script type="module" crossorigin src="/goit-js-hw-11-and-12/hw-11.js"></script>
+    <link rel="modulepreload" crossorigin href="/goit-js-hw-11-and-12/assets/styles-DD3qoKza.js">
+    <link rel="stylesheet" crossorigin href="/goit-js-hw-11-and-12/assets/styles-DvPDDfy5.css">
+    <link rel="stylesheet" crossorigin href="/goit-js-hw-11-and-12/assets/hw-12-DOoM7of5.css">
   </head>
   <body>
-    <load
-      src="./partials/header.html"
-      icon-path="./img/sprite.svg#logo"
-      highlight-act="active"
-    />
+    <header class="header">
+  <div class="container">
+    <nav class="nav">
+      <a class="nav-logo" href="./index.html" aria-label="Site logo">
+        <svg class="nav-logo-icon" width="100" height="30">
+          <use href="/goit-js-hw-11-and-12/assets/sprite-E8vg0sBb.svg#logo"></use>
+        </svg>
+      </a>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a class="nav-link active" href="./hw-11.html"
+            >Image search</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {=$highlight-curr}" href="./hw-12.html"
+            >Paginated image search</a
+          >
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
 
     <main class="app">
       <div class="container center">
@@ -114,6 +134,21 @@
       </div>
     </main>
 
-    <load src="./partials/footer.html" />
+    <footer class="footer">
+  <div class="container">
+    <p class="footer-desc">
+      Made with ✨ by
+      <a
+        class="footer-link"
+        href="https://goit.global/ua/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        GoIT team
+      </a>
+    </p>
+  </div>
+</footer>
+
   </body>
 </html>
