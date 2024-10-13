@@ -18,9 +18,12 @@ document
     console.log(photosData);
 
     if (photosData.hits.length === 0) {
-      gallery.replaceChildren(
-        'Sorry, there are no images matching your search query. Please try again!'
-      );
+      iziToast.error({
+        message:
+          'Sorry, there are no images matching your search query. Please try again!',
+        position: 'topRight',
+      });
+      gallery.replaceChildren();
       return;
     }
 
