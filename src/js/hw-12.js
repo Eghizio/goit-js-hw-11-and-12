@@ -5,6 +5,9 @@ const lightbox = new SimpleLightbox(
   '.gallery a#lightbox-link'
 ); /* Fuck Lightbox and it's documentation BTW :) */
 
+const API_LIMIT = 500;
+const PER_PAGE = 40;
+
 const State = {
   searchQuery: null,
   page: 1,
@@ -51,7 +54,16 @@ const Gallery = {
 
           loader.remove();
           Gallery.render(State.photos);
-          Gallery.LoadMoreButton.show();
+
+          const areMorePhotosAvailable =
+            State.photos.length < photosData.totalHits;
+          if (areMorePhotosAvailable) {
+            Gallery.LoadMoreButton.show();
+          } else {
+            Toaster.info(
+              "We're sorry, but you've reached the end of search results."
+            );
+          }
         } catch (error) {
           Toaster.error(`Sorry, couldn't load images. Please try again later!`);
         } finally {
@@ -72,6 +84,9 @@ const Toaster = {
   error(message) {
     iziToast.error({ message, position: 'topRight' });
   },
+  info(message) {
+    iziToast.info({ message, position: 'topRight' });
+  },
 };
 
 const Api = {
@@ -83,10 +98,11 @@ const Api = {
       orientation: 'horizontal',
       safesearch: true,
       page,
-      per_page: 40,
+      per_page: PER_PAGE,
     });
 
     const response = await axios.get(`https://pixabay.com/api/`, { params });
+    console.log(response.data);
     return response.data;
   },
 };
@@ -132,7 +148,15 @@ document
 
       Gallery.clear();
       Gallery.render(photoCards);
-      Gallery.LoadMoreButton.show();
+
+      const areMorePhotosAvailable = State.photos.length < photosData.totalHits;
+      if (areMorePhotosAvailable) {
+        Gallery.LoadMoreButton.show();
+      } else {
+        Toaster.info(
+          "We're sorry, but you've reached the end of search results."
+        );
+      }
     } catch (error) {
       Toaster.error(`Sorry, couldn't load images. Please try again later!`);
       Gallery.clear();
