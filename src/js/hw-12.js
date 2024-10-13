@@ -5,9 +5,6 @@ const lightbox = new SimpleLightbox(
   '.gallery a#lightbox-link'
 ); /* Fuck Lightbox and it's documentation BTW :) */
 
-const API_LIMIT = 500;
-const PER_PAGE = 40;
-
 const State = {
   searchQuery: null,
   page: 1,
@@ -55,6 +52,8 @@ const Gallery = {
           loader.remove();
           Gallery.render(State.photos);
 
+          scrollDownByTwoCardsHeights();
+
           const areMorePhotosAvailable =
             State.photos.length < photosData.totalHits;
           if (areMorePhotosAvailable) {
@@ -98,7 +97,7 @@ const Api = {
       orientation: 'horizontal',
       safesearch: true,
       page,
-      per_page: PER_PAGE,
+      per_page: 40,
     });
 
     const response = await axios.get(`https://pixabay.com/api/`, { params });
@@ -239,4 +238,9 @@ const applyLightbox = card => {
   });
 
   return card;
+};
+
+const scrollDownByTwoCardsHeights = () => {
+  const height = document.querySelector('.card').getBoundingClientRect().height;
+  scrollBy(0, 2 * height, { behavior: 'smooth' });
 };
