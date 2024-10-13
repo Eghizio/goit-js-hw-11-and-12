@@ -58,3 +58,9 @@ const examplePhoto = {
   comments: 133,
   downloads: 149824,
 };
+
+const exampleCard = document.querySelector('.card');
+
+const cards = Array.from({ length: 8 }, () => exampleCard.cloneNode(true));
+
+document.querySelector('.gallery').append(...cards);

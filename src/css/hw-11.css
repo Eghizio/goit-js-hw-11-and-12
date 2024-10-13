@@ -47,6 +47,16 @@
   color: var(--color-white);
 }
 
+.btn:hover {
+  background-color: var(--color-blue-light);
+}
+
+.gallery {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
 .card {
   width: 360px;
   height: 200px;
