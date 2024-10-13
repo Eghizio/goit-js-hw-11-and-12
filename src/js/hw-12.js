@@ -58,6 +58,8 @@ const getPhotos = async searchQuery => {
     image_type: 'photo',
     orientation: 'horizontal',
     safesearch: true,
+    page: 1,
+    per_page: 40,
   });
 
   const response = await axios.get(`https://pixabay.com/api/`, { params });
