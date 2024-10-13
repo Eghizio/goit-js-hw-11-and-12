@@ -20,7 +20,15 @@ document
 
     gallery.replaceChildren(createLoader());
 
-    const photosData = await getPhotos(searchQuery);
+    /* `await` Could be changed to Promise callbacks, due to requirements */
+    const photosData = await getPhotos(searchQuery).catch(error => {
+      iziToast.error({
+        message: `Sorry, couldn't load images. Please try again later!`,
+        position: 'topRight',
+      });
+      console.error(error);
+      gallery.replaceChildren();
+    });
 
     if (photosData.hits.length === 0) {
       iziToast.error({
@@ -51,9 +59,9 @@ const getPhotos = async searchQuery => {
     safesearch: true,
   });
 
-  return fetch(`https://pixabay.com/api/?${params}`)
-    .then(response => response.json())
-    .catch(console.error);
+  return fetch(`https://pixabay.com/api/?${params}`).then(response =>
+    response.json()
+  );
 };
 
 const toGalleryPhoto = ({
