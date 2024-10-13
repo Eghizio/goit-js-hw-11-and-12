@@ -1,7 +1,9 @@
 const API_KEY =
   '46463630-3c03a0f5bb3e2a02ee15ce5e1'; /* This should be kept a secret within Environmental Variables */
 
-const lightbox = new SimpleLightbox('.gallery a#lightbox-link');
+const lightbox = new SimpleLightbox(
+  '.gallery a#lightbox-link'
+); /* Fuck Lightbox and it's documentation BTW :) */
 
 document
   .querySelector('form#image-search')
