@@ -1,6 +1,8 @@
 const API_KEY =
   '46463630-3c03a0f5bb3e2a02ee15ce5e1'; /* This should be kept a secret within Environmental Variables */
 
+const lightbox = new SimpleLightbox('.gallery a#lightbox-link');
+
 document
   .querySelector('form#image-search')
   .addEventListener('submit', async event => {
@@ -32,6 +34,8 @@ document
       .map(applyLightbox);
 
     gallery.replaceChildren(...photoCards);
+
+    lightbox.refresh();
   });
 
 const getPhotos = async searchQuery => {
@@ -108,13 +112,10 @@ const applyLightbox = card => {
   card.querySelector('a#lightbox-link').addEventListener('click', event => {
     event.preventDefault();
 
-    const lightbox = new SimpleLightbox('a#lightbox-link');
-
     const closeModalOnEscape = event => {
       if (event.key === 'Escape') {
-        lightbox.close();
         document.removeEventListener('keydown', closeModalOnEscape);
-        lightbox.destroy();
+        lightbox.close();
       }
     };
 
