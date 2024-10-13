@@ -4,9 +4,21 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>Image search - Homework 11</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
     <link rel="stylesheet" href="./css/styles.css" />
+
     <link rel="stylesheet" href="./css/hw-11.css" />
+
     <script type="module" src="./js/hw-11.js" defer></script>
   </head>
   <body>
@@ -16,16 +28,17 @@
       highlight-act="active"
     />
 
-    <main>
+    <main class="app">
       <div class="container center">
-        <form id="image-search">
+        <form class="search-form" id="image-search">
           <input
+            class="query-input"
             type="text"
             name="query"
             id="query"
             placeholder="Search images..."
           />
-          <button type="submit">Search</button>
+          <button class="btn" type="submit">Search</button>
         </form>
       </div>
     </main>
