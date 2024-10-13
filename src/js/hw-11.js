@@ -126,7 +126,7 @@ const applyLightbox = card => {
 
     document.addEventListener('keydown', closeModalOnEscape);
 
-    lightbox.open('for some reason this makes lightbox open the proper img xD');
+    lightbox.open(event.currentTarget);
   });
 
   return card;
