@@ -132,6 +132,5 @@ const applyLightbox = card => {
   return card;
 };
 
-const createLoader = () => {
-  return 'Loading images, please wait...';
-};
+const createLoader = () =>
+  Object.assign(document.createElement('div'), { className: 'loader' });
