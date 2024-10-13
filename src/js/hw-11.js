@@ -6,7 +6,11 @@ document
   .addEventListener('submit', async event => {
     event.preventDefault();
 
-    const searchQuery = event.target.elements['query'].value;
+    const form = event.target;
+
+    const searchQuery = form.elements['query'].value;
+
+    form.reset();
 
     const photosData = await getPhotos(searchQuery);
     console.log(photosData);
@@ -16,7 +20,7 @@ document
 
     const photoCards = photos.map(createCard);
 
-    document.querySelector('.gallery').append(...photoCards);
+    document.querySelector('.gallery').replaceChildren(...photoCards);
   });
 
 const getPhotos = async searchQuery => {
