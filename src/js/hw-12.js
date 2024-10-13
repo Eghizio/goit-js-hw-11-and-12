@@ -9,7 +9,14 @@ const State = {
   searchQuery: null,
   page: 1,
   photos: [],
+  reset() {
+    this.searchQuery = null;
+    this.page = 1;
+    this.photos = [];
+  },
 };
+
+const el = (tag, props) => Object.assign(document.createElement(tag), props);
 
 const Gallery = {
   element: document.querySelector('.gallery'),
@@ -17,7 +24,41 @@ const Gallery = {
     this.element.replaceChildren();
   },
   render(items) {
-    this.element.replaceChildren(...(Array.isArray(items) ? items : [items]));
+    this.element.append(...(Array.isArray(items) ? items : [items]));
+  },
+  LoadMoreButton: {
+    element: el('button', {
+      className: 'btn',
+      textContent: 'Load more',
+      async onclick() {
+        try {
+          const photosData = await Api.getPhotos(
+            State.searchQuery,
+            State.page + 1
+          );
+          State.page++;
+
+          const photoCards = photosData.hits
+            .map(toGalleryPhoto)
+            .map(createCard)
+            .map(applyLightbox);
+
+          State.photos.push(...photoCards);
+
+          Gallery.render(State.photos);
+        } catch (error) {
+          Toaster.error(`Sorry, couldn't load images. Please try again later!`);
+        } finally {
+          lightbox.refresh();
+        }
+      },
+    }),
+    show() {
+      Gallery.element.after(this.element);
+    },
+    hide() {
+      this.element.remove();
+    },
   },
 };
 
@@ -44,8 +85,6 @@ const Api = {
   },
 };
 
-const el = (tag, props) => Object.assign(document.createElement(tag), props);
-
 const Loader = {
   create() {
     return el('div', { className: 'loader' });
@@ -60,12 +99,15 @@ document
     const searchQuery = form.elements['query'].value;
     form.reset();
 
+    Gallery.LoadMoreButton.hide();
+    Gallery.clear();
     Gallery.render(Loader.create());
 
+    State.reset();
+
     try {
+      const photosData = await Api.getPhotos(searchQuery);
       State.searchQuery = searchQuery;
-      State.page = 1;
-      const photosData = await Api.getPhotos(State.searchQuery);
 
       if (photosData.hits.length === 0) {
         Toaster.error(
@@ -82,9 +124,10 @@ document
 
       State.photos.push(...photoCards);
 
+      Gallery.clear();
       Gallery.render(photoCards);
+      Gallery.LoadMoreButton.show();
     } catch (error) {
-      console.error(error);
       Toaster.error(`Sorry, couldn't load images. Please try again later!`);
       Gallery.clear();
     } finally {
