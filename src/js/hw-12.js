@@ -31,6 +31,10 @@ const Gallery = {
       className: 'btn',
       textContent: 'Load more',
       async onclick() {
+        const loader = Loader.create();
+        this.after(loader);
+        Gallery.LoadMoreButton.hide();
+
         try {
           const photosData = await Api.getPhotos(
             State.searchQuery,
@@ -45,7 +49,9 @@ const Gallery = {
 
           State.photos.push(...photoCards);
 
+          loader.remove();
           Gallery.render(State.photos);
+          Gallery.LoadMoreButton.show();
         } catch (error) {
           Toaster.error(`Sorry, couldn't load images. Please try again later!`);
         } finally {
