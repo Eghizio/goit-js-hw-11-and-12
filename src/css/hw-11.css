@@ -4,18 +4,22 @@
   --color-blue-light: #6c8cff;
   --color-black: #000000;
   --color-white: #ffffff;
+  --color-font: #2e2f42;
 }
 
 .app {
   font-family: 'Montserrat', sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
+  color: var(--color-font);
 }
 
 .center {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 32px;
 }
 
 .search-form {
@@ -41,4 +45,44 @@
   padding: 8px 16px;
   background-color: var(--color-blue);
   color: var(--color-white);
+}
+
+.card {
+  width: 360px;
+  height: 200px;
+  border: 1px solid var(--color-gray);
+
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.card-img {
+  overflow: hidden;
+}
+
+.card-stats {
+  position: absolute;
+  bottom: 0;
+  height: 48px;
+  width: 100%;
+  background-color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.card-stats-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card-stats-item-label {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.card-stats-item-count {
+  font-size: 12px;
 }
