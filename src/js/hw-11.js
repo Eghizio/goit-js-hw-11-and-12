@@ -12,15 +12,24 @@ document
 
     form.reset();
 
+    const gallery = document.querySelector('.gallery');
+
     const photosData = await getPhotos(searchQuery);
     console.log(photosData);
+
+    if (photosData.hits.length === 0) {
+      gallery.replaceChildren(
+        'Sorry, there are no images matching your search query. Please try again!'
+      );
+      return;
+    }
 
     const photos = photosData.hits.map(toGalleryPhoto);
     console.log(photos);
 
     const photoCards = photos.map(createCard);
 
-    document.querySelector('.gallery').replaceChildren(...photoCards);
+    gallery.replaceChildren(...photoCards);
   });
 
 const getPhotos = async searchQuery => {
