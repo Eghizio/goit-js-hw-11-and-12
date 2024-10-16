@@ -5,6 +5,46 @@ const lightbox = new SimpleLightbox(
   '.gallery a#lightbox-link'
 ); /* Fuck Lightbox and it's documentation BTW :) */
 
+class TogglableElement {
+  #element;
+
+  constructor(selector) {
+    this.#element = document.querySelector(selector);
+  }
+
+  getElement() {
+    return this.#element;
+  }
+
+  show() {
+    this.#element.disabled = false;
+    this.#element.classList.remove('hidden');
+  }
+
+  hide() {
+    this.#element.disabled = true;
+    this.#element.classList.add('hidden');
+  }
+}
+
+const Loader = new TogglableElement('div.loader');
+const LoadMoreButton = new TogglableElement(`button[type="button"].btn`);
+
+const main = () => {
+  document
+    .querySelector('form#image-search')
+    .addEventListener('submit', async event => {
+      event.preventDefault();
+      const form = event.target;
+      const searchQuery = form.elements['query'].value;
+      form.reset();
+
+      await Api.searchPhotos(searchQuery);
+    });
+
+  LoadMoreButton.getElement().addEventListener('click', Api.loadMore);
+};
+
 const State = {
   searchQuery: null,
   page: 1,
@@ -16,8 +56,6 @@ const State = {
   },
 };
 
-const el = (tag, props) => Object.assign(document.createElement(tag), props);
-
 const Gallery = {
   element: document.querySelector('.gallery'),
   clear() {
@@ -25,57 +63,6 @@ const Gallery = {
   },
   render(items) {
     this.element.append(...(Array.isArray(items) ? items : [items]));
-  },
-  LoadMoreButton: {
-    element: el('button', {
-      className: 'btn',
-      textContent: 'Load more',
-      async onclick() {
-        const loader = Loader.create();
-        this.after(loader);
-        Gallery.LoadMoreButton.hide();
-
-        try {
-          const photosData = await Api.getPhotos(
-            State.searchQuery,
-            State.page + 1
-          );
-          State.page++;
-
-          const photoCards = photosData.hits
-            .map(toGalleryPhoto)
-            .map(createCard)
-            .map(applyLightbox);
-
-          State.photos.push(...photoCards);
-
-          loader.remove();
-          Gallery.render(State.photos);
-
-          scrollDownByTwoCardsHeights();
-
-          const areMorePhotosAvailable =
-            State.photos.length < photosData.totalHits;
-          if (areMorePhotosAvailable) {
-            Gallery.LoadMoreButton.show();
-          } else {
-            Toaster.info(
-              "We're sorry, but you've reached the end of search results."
-            );
-          }
-        } catch (error) {
-          Toaster.error(`Sorry, couldn't load images. Please try again later!`);
-        } finally {
-          lightbox.refresh();
-        }
-      },
-    }),
-    show() {
-      Gallery.element.after(this.element);
-    },
-    hide() {
-      this.element.remove();
-    },
   },
 };
 
@@ -101,28 +88,13 @@ const Api = {
     });
 
     const response = await axios.get(`https://pixabay.com/api/`, { params });
-    console.log(response.data);
     return response.data;
   },
-};
-
-const Loader = {
-  create() {
-    return el('div', { className: 'loader' });
-  },
-};
-
-document
-  .querySelector('form#image-search')
-  .addEventListener('submit', async event => {
-    event.preventDefault();
-    const form = event.target;
-    const searchQuery = form.elements['query'].value;
-    form.reset();
-
-    Gallery.LoadMoreButton.hide();
+  async searchPhotos(searchQuery) {
+    LoadMoreButton.hide();
     Gallery.clear();
-    Gallery.render(Loader.create());
+
+    Loader.show();
 
     State.reset();
 
@@ -135,6 +107,7 @@ document
           'Sorry, there are no images matching your search query. Please try again!'
         );
         Gallery.clear();
+        Loader.hide();
         return;
       }
 
@@ -146,11 +119,13 @@ document
       State.photos.push(...photoCards);
 
       Gallery.clear();
+      Loader.hide();
       Gallery.render(photoCards);
 
       const areMorePhotosAvailable = State.photos.length < photosData.totalHits;
+
       if (areMorePhotosAvailable) {
-        Gallery.LoadMoreButton.show();
+        LoadMoreButton.show();
       } else {
         Toaster.info(
           "We're sorry, but you've reached the end of search results."
@@ -159,12 +134,55 @@ document
     } catch (error) {
       Toaster.error(`Sorry, couldn't load images. Please try again later!`);
       Gallery.clear();
+      Loader.hide();
     } finally {
       lightbox.refresh();
     }
-  });
+  },
+  async loadMore() {
+    Loader.show();
+    LoadMoreButton.hide();
 
-const toGalleryPhoto = ({
+    try {
+      const photosData = await Api.getPhotos(State.searchQuery, State.page + 1);
+      State.page++;
+
+      if (photosData.hits.length === 0) {
+        Toaster.info(
+          "We're sorry, but you've reached the end of search results."
+        );
+        return;
+      }
+
+      const photoCards = photosData.hits
+        .map(toGalleryPhoto)
+        .map(createCard)
+        .map(applyLightbox);
+
+      State.photos.push(...photoCards);
+
+      Loader.hide();
+      Gallery.render(State.photos);
+
+      scrollDownByTwoCardsHeights();
+
+      const areMorePhotosAvailable = State.photos.length < photosData.totalHits;
+      if (areMorePhotosAvailable) {
+        LoadMoreButton.show();
+      } else {
+        Toaster.info(
+          "We're sorry, but you've reached the end of search results."
+        );
+      }
+    } catch (error) {
+      Toaster.error(`Sorry, couldn't load images. Please try again later!`);
+    } finally {
+      lightbox.refresh();
+    }
+  },
+};
+
+export const toGalleryPhoto = ({
   webformatURL,
   largeImageURL,
   tags,
@@ -182,7 +200,7 @@ const toGalleryPhoto = ({
   downloads,
 });
 
-const createCard = ({
+export const createCard = ({
   webformatURL,
   largeImageURL,
   tags,
@@ -221,7 +239,7 @@ const createCard = ({
   return card;
 };
 
-const applyLightbox = card => {
+export const applyLightbox = card => {
   card.querySelector('a#lightbox-link').addEventListener('click', event => {
     event.preventDefault();
 
@@ -240,7 +258,9 @@ const applyLightbox = card => {
   return card;
 };
 
-const scrollDownByTwoCardsHeights = () => {
+export const scrollDownByTwoCardsHeights = () => {
   const height = document.querySelector('.card').getBoundingClientRect().height;
   scrollBy(0, 2 * height, { behavior: 'smooth' });
 };
+
+main();

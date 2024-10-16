@@ -57,6 +57,14 @@ body {
   background-color: var(--color-blue-light);
 }
 
+.btn:disabled {
+  background-color: var(--color-gray);
+}
+
+:root .hidden {
+  display: none;
+}
+
 .gallery {
   display: flex;
   align-items: center;
